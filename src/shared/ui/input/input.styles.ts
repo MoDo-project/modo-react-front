@@ -9,8 +9,7 @@ export const inputVariants = createVariants({
     },
     error: {
       true: 'border-red-500 focus:ring-2 focus:ring-red-500',
-      false:
-        'border-gray-300 dark:border-zinc-700 focus:border-black dark:focus:border-white',
+      false: 'border-gray-300 dark:border-zinc-700 focus:border-black dark:focus:border-white',
     },
   },
   defaultVariants: {
@@ -18,4 +17,3 @@ export const inputVariants = createVariants({
     error: 'false',
   },
 })
-

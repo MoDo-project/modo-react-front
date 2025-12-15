@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTheme } from '../../contexts/ThemeContext'
+import { useThemeStore, selectIsDark } from 'entities/theme'
 import { useNavigate } from 'react-router-dom'
 
 export default function Profile() {
   const { user, logout } = useAuth()
-  const { isDark } = useTheme()
+  const isDark = useThemeStore(selectIsDark)
   const navigate = useNavigate()
   const [name, setName] = useState(user?.name || '')
   const [email, setEmail] = useState(user?.email || '')

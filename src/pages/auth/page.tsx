@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { useTheme } from '../../contexts/ThemeContext'
+import { useThemeStore, selectIsDark } from 'entities/theme'
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true)
@@ -10,7 +10,7 @@ export default function Auth() {
   const [password, setPassword] = useState('')
   const { login, signup, continueAsGuest } = useAuth()
   const navigate = useNavigate()
-  const { isDark } = useTheme()
+  const isDark = useThemeStore(selectIsDark)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

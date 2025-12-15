@@ -1,4 +1,4 @@
-import { Todo } from 'src/types'
+import { Todo } from '@/types'
 
 /**
  * 순수 함수: 하위 할일 진행률 계산

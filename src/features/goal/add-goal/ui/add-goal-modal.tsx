@@ -5,7 +5,7 @@ import { Input } from 'shared/ui/input'
 import { ColorPicker } from 'shared/ui/color-picker'
 import { IconPicker } from 'shared/ui/icon-picker'
 import { COLORS, ICONS } from 'shared/constants'
-import { Goal } from 'src/types'
+import { Goal } from '@/types'
 
 interface AddGoalModalProps {
   isOpen: boolean
@@ -20,8 +20,8 @@ interface AddGoalModalProps {
  */
 export const AddGoalModal = ({ isOpen, onClose, onAdd, editingGoal }: AddGoalModalProps) => {
   const [title, setTitle] = useState('')
-  const [selectedColor, setSelectedColor] = useState(COLORS[0].value)
-  const [selectedIcon, setSelectedIcon] = useState(ICONS[0].value)
+  const [selectedColor, setSelectedColor] = useState<string>(COLORS[0].value)
+  const [selectedIcon, setSelectedIcon] = useState<string>(ICONS[0].value)
 
   useEffect(() => {
     if (editingGoal) {

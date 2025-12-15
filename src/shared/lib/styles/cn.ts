@@ -5,4 +5,3 @@ import clsx, { ClassValue } from 'clsx'
  * @example cn('text-red-500', isDark && 'bg-black', 'p-4')
  */
 export const cn = (...inputs: ClassValue[]): string => clsx(inputs)
-

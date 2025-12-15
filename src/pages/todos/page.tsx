@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTheme } from '../../contexts/ThemeContext'
+import { useThemeStore, selectIsDark } from 'entities/theme'
 import { useTodos } from '../../hooks/useTodos'
 import TodoList from './components/TodoList'
 import GoalTabs from './components/GoalTabs'
 import Header from './components/Header'
 import AddTodoModal from './components/AddTodoModal'
-import AddGoalModal from './components/AddGoalModal'
+import { AddGoalModal } from 'features/goal/add-goal'
 import { Goal } from '../../types'
 
 export default function Todos() {
   const { user, isGuest } = useAuth()
-  const { isDark } = useTheme()
+  const isDark = useThemeStore(selectIsDark)
   const {
     todos,
     goals,
@@ -174,13 +174,12 @@ export default function Todos() {
         />
       )}
 
-      {isAddGoalOpen && (
-        <AddGoalModal
-          onClose={handleCloseGoalModal}
-          onAdd={handleSaveGoal}
-          editingGoal={editingGoal}
-        />
-      )}
+      <AddGoalModal
+        isOpen={isAddGoalOpen}
+        onClose={handleCloseGoalModal}
+        onAdd={handleSaveGoal}
+        editingGoal={editingGoal}
+      />
     </div>
   )
 }

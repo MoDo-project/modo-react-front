@@ -22,4 +22,3 @@ export const buttonVariants = createVariants({
     size: 'md',
   },
 })
-

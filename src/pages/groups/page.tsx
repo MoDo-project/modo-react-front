@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTheme } from '../../contexts/ThemeContext'
+import { useThemeStore, selectIsDark } from 'entities/theme'
 import { useNavigate } from 'react-router-dom'
 import { useTodos } from '../../hooks/useTodos'
 import { StudyGroup } from '../../types'
 
 export default function Groups() {
   const { user } = useAuth()
-  const { isDark } = useTheme()
+  const isDark = useThemeStore(selectIsDark)
   const navigate = useNavigate()
   const { goals } = useTodos()
   const [groups, setGroups] = useState<StudyGroup[]>(() => {

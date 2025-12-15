@@ -1,4 +1,4 @@
-import { Todo } from 'src/types'
+import { Todo } from '@/types'
 
 /**
  * 순수 함수: 특정 할일의 모든 하위 할일 ID 수집 (재귀)

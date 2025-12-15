@@ -54,7 +54,7 @@ export const Modal = ({
     >
       <div
         className={cn(
-          'w-full max-h-[90vh] overflow-y-auto rounded-2xl p-6',
+          'max-h-[90vh] w-full overflow-y-auto rounded-2xl p-6',
           'bg-white dark:bg-zinc-900',
           sizeClasses[size]
         )}
@@ -62,13 +62,11 @@ export const Modal = ({
       >
         {(title || showCloseButton) && (
           <div className="mb-6 flex items-center justify-between">
-            {title && (
-              <h2 className="text-xl font-semibold text-black dark:text-white">{title}</h2>
-            )}
+            {title && <h2 className="text-xl font-semibold text-black dark:text-white">{title}</h2>}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer transition-colors"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-zinc-800"
               >
                 <i className="ri-close-line text-xl text-gray-600 dark:text-gray-400" />
               </button>
@@ -80,4 +78,3 @@ export const Modal = ({
     </div>
   )
 }
-

@@ -16,4 +16,3 @@ export const pipeSafe =
   (...fns: PipeFunc[]) =>
   (value: any) =>
     fns.reduce((acc, fn) => fn(acc), value)
-

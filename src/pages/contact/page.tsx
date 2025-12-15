@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { useTheme } from '../../contexts/ThemeContext'
+import { useThemeStore, selectIsDark } from 'entities/theme'
 import { useNavigate } from 'react-router-dom'
 
 export default function Contact() {
-  const { isDark } = useTheme()
+  const isDark = useThemeStore(selectIsDark)
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '',
