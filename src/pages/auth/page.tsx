@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { useThemeStore, selectIsDark } from 'entities/theme'
 import { useAuthForm } from 'entities/auth'
 
 export default function Auth() {
+  const { t, i18n } = useTranslation()
   const isDark = useThemeStore(selectIsDark)
 
   const {
@@ -22,20 +24,41 @@ export default function Auth() {
     toggleMode,
   } = useAuthForm()
 
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'ko' ? 'en' : 'ko'
+    i18n.changeLanguage(newLang)
+  }
+
   return (
     <div
       className={`flex min-h-screen items-center justify-center px-4 ${isDark ? 'bg-black' : 'bg-white'}`}
     >
       <div className="w-full max-w-md">
+        {/* 언어 전환 버튼 */}
+        <div className="mb-4 flex justify-end">
+          <button
+            onClick={toggleLanguage}
+            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              isDark
+                ? 'bg-zinc-900 text-white hover:bg-zinc-800'
+                : 'bg-gray-100 text-black hover:bg-gray-200'
+            }`}
+          >
+            {i18n.language === 'ko' ? '🇺🇸 EN' : '🇰🇷 KO'}
+          </button>
+        </div>
+
         <div className="mb-8 text-center">
           <img
             src="https://public.readdy.ai/ai/img_res/52db04f4-c951-454e-b4be-80e9fd073997.png"
             alt="Logo"
             className="mx-auto mb-4 h-16 w-16"
           />
-          <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>MODO</h1>
+          <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>
+            {t('auth.title')}
+          </h1>
           <p className={`mt-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            {isLogin ? '로그인하여 시작하세요' : '회원가입하여 시작하세요'}
+            {isLogin ? t('auth.login.title') : t('auth.signup.title')}
           </p>
         </div>
 
@@ -45,7 +68,7 @@ export default function Auth() {
               <label
                 className={`mb-2 block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
               >
-                아이디
+                {t('auth.form.username')}
               </label>
               <input
                 type="text"
@@ -56,7 +79,7 @@ export default function Auth() {
                     ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
                     : 'border border-gray-200 bg-white text-black focus:border-gray-300'
                 } transition-colors outline-none`}
-                placeholder="아이디를 입력하세요"
+                placeholder={t('auth.form.usernamePlaceholder')}
                 required
                 disabled={isPending}
               />
@@ -65,7 +88,7 @@ export default function Auth() {
               <label
                 className={`mb-2 block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
               >
-                비밀번호
+                {t('auth.form.password')}
               </label>
               <input
                 type="password"
@@ -76,7 +99,7 @@ export default function Auth() {
                     ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
                     : 'border border-gray-200 bg-white text-black focus:border-gray-300'
                 } transition-colors outline-none`}
-                placeholder="비밀번호를 입력하세요"
+                placeholder={t('auth.form.passwordPlaceholder')}
                 required
                 disabled={isPending}
               />
@@ -87,7 +110,7 @@ export default function Auth() {
                   <label
                     className={`mb-2 block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
                   >
-                    비밀번호 확인
+                    {t('auth.form.confirmPassword')}
                   </label>
                   <input
                     type="password"
@@ -98,7 +121,7 @@ export default function Auth() {
                         ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
                         : 'border border-gray-200 bg-white text-black focus:border-gray-300'
                     } transition-colors outline-none`}
-                    placeholder="비밀번호를 입력하세요"
+                    placeholder={t('auth.form.confirmPasswordPlaceholder')}
                     required
                     disabled={isPending}
                   />
@@ -107,7 +130,7 @@ export default function Auth() {
                   <label
                     className={`mb-2 block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
                   >
-                    이메일
+                    {t('auth.form.email')}
                   </label>
                   <input
                     type="email"
@@ -118,7 +141,7 @@ export default function Auth() {
                         ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
                         : 'border border-gray-200 bg-white text-black focus:border-gray-300'
                     } transition-colors outline-none`}
-                    placeholder="이메일을 입력하세요"
+                    placeholder={t('auth.form.emailPlaceholder')}
                     required
                     disabled={isPending}
                   />
@@ -127,7 +150,7 @@ export default function Auth() {
                   <label
                     className={`mb-2 block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
                   >
-                    닉네임
+                    {t('auth.form.nickname')}
                   </label>
                   <input
                     type="text"
@@ -138,7 +161,7 @@ export default function Auth() {
                         ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
                         : 'border border-gray-200 bg-white text-black focus:border-gray-300'
                     } transition-colors outline-none`}
-                    placeholder="이메일을 입력하세요"
+                    placeholder={t('auth.form.nicknamePlaceholder')}
                     required
                     disabled={isPending}
                   />
@@ -155,7 +178,13 @@ export default function Auth() {
                   : 'bg-black text-white hover:bg-gray-900 disabled:bg-gray-400'
               }`}
             >
-              {isPending ? '처리 중...' : isLogin ? '로그인' : '회원가입'}
+              {isPending
+                ? isLogin
+                  ? t('auth.login.processing')
+                  : t('auth.signup.processing')
+                : isLogin
+                  ? t('auth.login.button')
+                  : t('auth.signup.button')}
             </button>
           </form>
 
@@ -169,7 +198,7 @@ export default function Auth() {
                   : 'bg-gray-200 text-black hover:bg-gray-300 disabled:bg-gray-100'
               }`}
             >
-              게스트로 계속하기
+              {t('auth.guest.button')}
             </button>
           </div>
 
@@ -179,7 +208,7 @@ export default function Auth() {
               disabled={isPending}
               className={`text-sm ${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'} transition-colors disabled:opacity-50`}
             >
-              {isLogin ? '계정이 없으신가요? 회원가입' : '이미 계정이 있으신가요? 로그인'}
+              {isLogin ? t('auth.toggle.toSignup') : t('auth.toggle.toLogin')}
             </button>
           </div>
         </div>

@@ -21,4 +21,3 @@ export default {
     maxLength: 'Must be no more than {{max}} characters',
   },
 }
-
