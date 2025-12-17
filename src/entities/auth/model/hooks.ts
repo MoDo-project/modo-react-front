@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { authApi, type LoginRequest, type SignupRequest } from '../api/auth-api'
 import { handleApiError, authStorage } from '@/shared/api'
+import { useAuthValidation } from '../lib/useAuthValidation'
 
 export const authKeys = {
   all: ['auth'] as const,
@@ -43,7 +44,6 @@ export function useLogout() {
   return useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => {
-      // authStorage.clearAll()은 이미 authApi.logout에서 호출됨
       queryClient.clear()
 
       if (import.meta.env.DEV) {
@@ -85,10 +85,8 @@ export function useSignupWithAutoLogin() {
 
   return useMutation({
     mutationFn: async (data: SignupRequest & { password: string }) => {
-      // 1. 회원가입
       const signupData = await authApi.signup(data)
 
-      // 2. 자동 로그인
       const loginData = await authApi.login({
         username: data.username,
         password: data.password,
@@ -136,10 +134,21 @@ export function useAuthForm() {
   const { mutate: login, isPending: isLoginPending } = useLogin()
   const { mutate: signupWithAutoLogin, isPending: isSignupPending } = useSignupWithAutoLogin()
 
+  const { errors, validateSignupForm, validateLoginForm, clearError } = useAuthValidation()
+
   const isPending = isLoginPending || isSignupPending
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    let isValid = false
+    if (isLogin) {
+      isValid = validateLoginForm({ username, password })
+    } else {
+      isValid = validateSignupForm({ username, email, password, confirmPassword, nickname })
+    }
+
+    if (!isValid) return
 
     if (isLogin) {
       login(
@@ -177,6 +186,31 @@ export function useAuthForm() {
     setIsLogin(!isLogin)
   }
 
+  const handleUsernameChange = (value: string) => {
+    setUsername(value)
+    clearError('username')
+  }
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value)
+    clearError('email')
+  }
+
+  const handleNicknameChange = (value: string) => {
+    setNickname(value)
+    clearError('nickname')
+  }
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value)
+    clearError('password')
+  }
+
+  const handleConfirmPasswordChange = (value: string) => {
+    setConfirmPassword(value)
+    clearError('confirmPassword')
+  }
+
   return {
     isLogin,
     username,
@@ -185,12 +219,13 @@ export function useAuthForm() {
     password,
     confirmPassword,
     isPending,
+    errors,
 
-    setUsername,
-    setEmail,
-    setNickname,
-    setPassword,
-    setConfirmPassword,
+    setUsername: handleUsernameChange,
+    setEmail: handleEmailChange,
+    setNickname: handleNicknameChange,
+    setPassword: handlePasswordChange,
+    setConfirmPassword: handleConfirmPasswordChange,
 
     handleSubmit,
     handleGuestMode,

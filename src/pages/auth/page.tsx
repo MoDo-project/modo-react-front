@@ -14,6 +14,7 @@ export const AuthPage = () => {
     password,
     confirmPassword,
     isPending,
+    errors,
     setUsername,
     setEmail,
     setNickname,
@@ -34,7 +35,6 @@ export const AuthPage = () => {
       className={`flex min-h-screen items-center justify-center px-4 ${isDark ? 'bg-black' : 'bg-white'}`}
     >
       <div className="w-full max-w-md">
-        {/* 언어 전환 버튼 */}
         <div className="mb-4 flex justify-end">
           <button
             onClick={toggleLanguage}
@@ -75,14 +75,16 @@ export const AuthPage = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className={`w-full rounded-lg px-4 py-3 text-sm ${
-                  isDark
-                    ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
-                    : 'border border-gray-200 bg-white text-black focus:border-gray-300'
-                } transition-colors outline-none`}
+                  errors.username
+                    ? 'border-2 border-red-500'
+                    : isDark
+                      ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
+                      : 'border border-gray-200 bg-white text-black focus:border-gray-300'
+                } ${isDark ? 'bg-black text-white' : 'bg-white text-black'} transition-colors outline-none`}
                 placeholder={t('auth.form.usernamePlaceholder')}
-                required
                 disabled={isPending}
               />
+              {errors.username && <p className="mt-1 text-sm text-red-500">{errors.username}</p>}
             </div>
             <div>
               <label
@@ -95,14 +97,16 @@ export const AuthPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={`w-full rounded-lg px-4 py-3 text-sm ${
-                  isDark
-                    ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
-                    : 'border border-gray-200 bg-white text-black focus:border-gray-300'
-                } transition-colors outline-none`}
+                  errors.password
+                    ? 'border-2 border-red-500'
+                    : isDark
+                      ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
+                      : 'border border-gray-200 bg-white text-black focus:border-gray-300'
+                } ${isDark ? 'bg-black text-white' : 'bg-white text-black'} transition-colors outline-none`}
                 placeholder={t('auth.form.passwordPlaceholder')}
-                required
                 disabled={isPending}
               />
+              {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
             </div>
             {!isLogin && (
               <>
@@ -117,14 +121,18 @@ export const AuthPage = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className={`w-full rounded-lg px-4 py-3 text-sm ${
-                      isDark
-                        ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
-                        : 'border border-gray-200 bg-white text-black focus:border-gray-300'
-                    } transition-colors outline-none`}
+                      errors.confirmPassword
+                        ? 'border-2 border-red-500'
+                        : isDark
+                          ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
+                          : 'border border-gray-200 bg-white text-black focus:border-gray-300'
+                    } ${isDark ? 'bg-black text-white' : 'bg-white text-black'} transition-colors outline-none`}
                     placeholder={t('auth.form.confirmPasswordPlaceholder')}
-                    required
                     disabled={isPending}
                   />
+                  {errors.confirmPassword && (
+                    <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
+                  )}
                 </div>
                 <div>
                   <label
@@ -137,14 +145,16 @@ export const AuthPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={`w-full rounded-lg px-4 py-3 text-sm ${
-                      isDark
-                        ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
-                        : 'border border-gray-200 bg-white text-black focus:border-gray-300'
-                    } transition-colors outline-none`}
+                      errors.email
+                        ? 'border-2 border-red-500'
+                        : isDark
+                          ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
+                          : 'border border-gray-200 bg-white text-black focus:border-gray-300'
+                    } ${isDark ? 'bg-black text-white' : 'bg-white text-black'} transition-colors outline-none`}
                     placeholder={t('auth.form.emailPlaceholder')}
-                    required
                     disabled={isPending}
                   />
+                  {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
                 </div>
                 <div>
                   <label
@@ -157,14 +167,18 @@ export const AuthPage = () => {
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     className={`w-full rounded-lg px-4 py-3 text-sm ${
-                      isDark
-                        ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
-                        : 'border border-gray-200 bg-white text-black focus:border-gray-300'
-                    } transition-colors outline-none`}
+                      errors.nickname
+                        ? 'border-2 border-red-500'
+                        : isDark
+                          ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
+                          : 'border border-gray-200 bg-white text-black focus:border-gray-300'
+                    } ${isDark ? 'bg-black text-white' : 'bg-white text-black'} transition-colors outline-none`}
                     placeholder={t('auth.form.nicknamePlaceholder')}
-                    required
                     disabled={isPending}
                   />
+                  {errors.nickname && (
+                    <p className="mt-1 text-sm text-red-500">{errors.nickname}</p>
+                  )}
                 </div>
               </>
             )}
