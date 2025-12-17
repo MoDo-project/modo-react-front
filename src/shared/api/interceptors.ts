@@ -34,8 +34,10 @@ export const isApiError = (error: unknown): error is ApiError => {
 
 export const handleApiError = (error: unknown): void => {
   if (!isApiError(error)) {
-    const message = error instanceof Error ? error.message : 'Unknown error'
-    console.error('Non-API Error:', message)
+    if (import.meta.env.DEV) {
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      console.error('Non-API Error:', message)
+    }
     return
   }
 
@@ -52,26 +54,38 @@ export const handleApiError = (error: unknown): void => {
       handleUnauthorized()
       break
     case 403:
-      console.warn('Access forbidden:', error.message)
+      if (import.meta.env.DEV) {
+        console.warn('Access forbidden:', error.message)
+      }
       break
     case 404:
-      console.warn('Resource not found:', error.message)
+      if (import.meta.env.DEV) {
+        console.warn('Resource not found:', error.message)
+      }
       break
     case 422:
-      console.warn('Validation error:', error.errors)
+      if (import.meta.env.DEV) {
+        console.warn('Validation error:', error.errors)
+      }
       break
     case 500:
-      console.error('Server error:', error.message)
+      if (import.meta.env.DEV) {
+        console.error('Server error:', error.message)
+      }
       break
     default:
-      console.error('Unknown error:', error.message)
+      if (import.meta.env.DEV) {
+        console.error('Unknown error:', error.message)
+      }
   }
 
   errorHandlers.forEach((handler) => {
     try {
       handler(error)
     } catch (err) {
-      console.error('Error in error handler:', err)
+      if (import.meta.env.DEV) {
+        console.error('Error in error handler:', err)
+      }
     }
   })
 }

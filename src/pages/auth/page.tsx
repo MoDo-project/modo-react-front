@@ -1,64 +1,26 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useThemeStore, selectIsDark } from 'entities/theme'
-import { useLogin, useSignupWithAutoLogin } from 'entities/auth'
-import { authStorage } from '@/shared/api'
+import { useAuthForm } from 'entities/auth'
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true)
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [nickname, setNickname] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-
-  const navigate = useNavigate()
   const isDark = useThemeStore(selectIsDark)
 
-  const { mutate: login, isPending: isLoginPending } = useLogin()
-  const { mutate: signupWithAutoLogin, isPending: isSignupPending } = useSignupWithAutoLogin()
-
-  const isPending = isLoginPending || isSignupPending
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (isLogin) {
-      login(
-        { username, password },
-        {
-          onSuccess: () => {
-            navigate('/todos')
-          },
-          onError: (error) => {
-            console.error('Login error:', error)
-          },
-        }
-      )
-    } else {
-      signupWithAutoLogin(
-        {
-          username,
-          password,
-          nickname,
-          email,
-        },
-        {
-          onSuccess: () => {
-            navigate('/todos')
-          },
-          onError: (error) => {
-            console.error('Signup error:', error)
-          },
-        }
-      )
-    }
-  }
-
-  const handleGuestMode = () => {
-    authStorage.guest.set()
-    navigate('/todos')
-  }
+  const {
+    isLogin,
+    username,
+    email,
+    nickname,
+    password,
+    confirmPassword,
+    isPending,
+    setUsername,
+    setEmail,
+    setNickname,
+    setPassword,
+    setConfirmPassword,
+    handleSubmit,
+    handleGuestMode,
+    toggleMode,
+  } = useAuthForm()
 
   return (
     <div
@@ -213,7 +175,7 @@ export default function Auth() {
 
           <div className="mt-6 text-center">
             <button
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={toggleMode}
               disabled={isPending}
               className={`text-sm ${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'} transition-colors disabled:opacity-50`}
             >
