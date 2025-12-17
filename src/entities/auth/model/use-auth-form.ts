@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { authStorage } from '@/shared/api'
@@ -23,10 +23,8 @@ export const useAuthForm = () => {
 
   const isPending = isLoginPending || isSignupPending
 
-  // Debounce를 위한 timeout refs
   const timeoutRefs = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
 
-  // Cleanup: 컴포넌트 언마운트 시 모든 timeout 제거
   useEffect(() => {
     return () => {
       Object.values(timeoutRefs.current).forEach(clearTimeout)
@@ -41,12 +39,10 @@ export const useAuthForm = () => {
     return (value: string) => {
       setter(value)
 
-      // 이전 timeout 제거 (debounce)
       if (timeoutRefs.current[field]) {
         clearTimeout(timeoutRefs.current[field])
       }
 
-      // 1초 후 검증 실행
       timeoutRefs.current[field] = setTimeout(() => {
         if (validator && value) {
           const error = validator(value)
@@ -136,6 +132,28 @@ export const useAuthForm = () => {
     }, 1000)
   }
 
+  const isFormValid = useMemo(() => {
+    if (isLogin) {
+      return (
+        username.trim() !== '' && password.trim() !== '' && !errors.username && !errors.password
+      )
+    } else {
+      return (
+        username.trim() !== '' &&
+        email.trim() !== '' &&
+        password.trim() !== '' &&
+        confirmPassword.trim() !== '' &&
+        nickname.trim() !== '' &&
+        !errors.username &&
+        !errors.email &&
+        !errors.password &&
+        !errors.confirmPassword &&
+        !errors.nickname &&
+        password === confirmPassword
+      )
+    }
+  }, [isLogin, username, email, password, confirmPassword, nickname, errors])
+
   return {
     isLogin,
     username,
@@ -145,6 +163,7 @@ export const useAuthForm = () => {
     confirmPassword,
     isPending,
     errors,
+    isFormValid,
 
     setUsername: handleUsernameChange,
     setEmail: handleEmailChange,

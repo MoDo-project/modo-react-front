@@ -15,6 +15,7 @@ export const AuthPage = () => {
     confirmPassword,
     isPending,
     errors,
+    isFormValid,
     setUsername,
     setEmail,
     setNickname,
@@ -185,11 +186,11 @@ export const AuthPage = () => {
 
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || !isFormValid}
               className={`w-full rounded-lg py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                 isDark
-                  ? 'bg-white text-black hover:bg-gray-100 disabled:bg-gray-600'
-                  : 'bg-black text-white hover:bg-gray-900 disabled:bg-gray-400'
+                  ? 'bg-white text-black hover:bg-gray-100 disabled:cursor-not-allowed disabled:bg-gray-600'
+                  : 'bg-black text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-400'
               }`}
             >
               {isPending
