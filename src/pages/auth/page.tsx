@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { useThemeStore, selectIsDark } from 'entities/theme'
 import { useAuthForm } from 'entities/auth'
+import { useLanguageToggle } from '@/shared/lib/i18n'
 
 export const AuthPage = () => {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const isDark = useThemeStore(selectIsDark)
+  const { toggleLanguage, currentLanguage } = useLanguageToggle()
 
   const {
     isLogin,
@@ -26,11 +28,6 @@ export const AuthPage = () => {
     toggleMode,
   } = useAuthForm()
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'ko' ? 'en' : 'ko'
-    i18n.changeLanguage(newLang)
-  }
-
   return (
     <div
       className={`flex min-h-screen items-center justify-center px-4 ${isDark ? 'bg-black' : 'bg-white'}`}
@@ -45,7 +42,7 @@ export const AuthPage = () => {
                 : 'bg-gray-100 text-black hover:bg-gray-200'
             }`}
           >
-            {i18n.language === 'ko' ? '🇺🇸 EN' : '🇰🇷 KO'}
+            {currentLanguage === 'ko' ? '🇺🇸 EN' : '🇰🇷 KO'}
           </button>
         </div>
 

@@ -1,5 +1,4 @@
 export * from './auth/page'
-export * from './home/page'
 export * from './todos/page'
 export * from './profile/page'
 export * from './groups/page'
