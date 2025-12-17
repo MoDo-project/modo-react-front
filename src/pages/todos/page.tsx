@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useAuth } from '../../contexts/AuthContext'
 import { useThemeStore, selectIsDark } from 'entities/theme'
+import { useAuthStatus } from 'entities/auth'
 import { useTodos } from '../../hooks/useTodos'
 import TodoList from './components/TodoList'
 import GoalTabs from './components/GoalTabs'
@@ -10,7 +10,7 @@ import { AddGoalModal } from 'features/goal/add-goal'
 import { Goal } from '../../types'
 
 export default function Todos() {
-  const { user, isGuest } = useAuth()
+  const { user, isGuest } = useAuthStatus()
   const isDark = useThemeStore(selectIsDark)
   const {
     todos,
@@ -106,7 +106,7 @@ export default function Todos() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsAddTodoOpen(true)}
-                  className={`cursor-pointer whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`cursor-pointer rounded-lg px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                     isDark
                       ? 'bg-white text-black hover:bg-gray-100'
                       : 'bg-black text-white hover:bg-gray-900'
@@ -139,7 +139,7 @@ export default function Todos() {
               </h2>
               <button
                 onClick={() => setIsAddTodoOpen(true)}
-                className={`cursor-pointer whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                className={`cursor-pointer rounded-lg px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                   isDark
                     ? 'bg-white text-black hover:bg-gray-100'
                     : 'bg-black text-white hover:bg-gray-900'

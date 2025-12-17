@@ -1,10 +1,10 @@
-import { useAuth } from '../../../contexts/AuthContext'
 import { useThemeStore, selectIsDark, selectToggleTheme } from 'entities/theme'
+import { useAuthStatus } from 'entities/auth'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 export default function Header() {
-  const { user } = useAuth()
+  const { user } = useAuthStatus()
   const isDark = useThemeStore(selectIsDark)
   const toggleTheme = useThemeStore(selectToggleTheme)
   const navigate = useNavigate()

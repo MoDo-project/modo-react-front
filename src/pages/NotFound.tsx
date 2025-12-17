@@ -5,7 +5,7 @@ export default function NotFound() {
 
   return (
     <div className="relative flex h-screen flex-col items-center justify-center px-4 text-center">
-      <h1 className="pointer-events-none absolute bottom-0 z-0 select-none text-9xl font-black text-gray-50 md:text-[12rem]">
+      <h1 className="pointer-events-none absolute bottom-0 z-0 text-9xl font-black text-gray-50 select-none md:text-[12rem]">
         404
       </h1>
       <div className="relative z-10">

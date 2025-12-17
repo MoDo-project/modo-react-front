@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { useAuth } from '../../contexts/AuthContext'
 import { useThemeStore, selectIsDark } from 'entities/theme'
+import { useAuthStatus, useLogout } from 'entities/auth'
 import { useNavigate } from 'react-router-dom'
 
 export default function Profile() {
-  const { user, logout } = useAuth()
+  const { user } = useAuthStatus()
+  const { mutate: logout } = useLogout()
   const isDark = useThemeStore(selectIsDark)
   const navigate = useNavigate()
   const [name, setName] = useState(user?.name || '')
@@ -151,8 +152,11 @@ export default function Profile() {
             <button
               type="button"
               onClick={() => {
-                logout()
-                navigate('/')
+                logout(undefined, {
+                  onSuccess: () => {
+                    navigate('/')
+                  }
+                })
               }}
               className={`w-full whitespace-nowrap rounded-lg py-3 text-sm font-medium transition-colors ${
                 isDark

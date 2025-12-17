@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useAuth } from '../../contexts/AuthContext'
 import { useThemeStore, selectIsDark } from 'entities/theme'
+import { useAuthStatus } from 'entities/auth'
 import { useNavigate } from 'react-router-dom'
 import { useTodos } from '../../hooks/useTodos'
 import { StudyGroup } from '../../types'
 
 export default function Groups() {
-  const { user } = useAuth()
+  const { user } = useAuthStatus()
   const isDark = useThemeStore(selectIsDark)
   const navigate = useNavigate()
   const { goals } = useTodos()
@@ -127,7 +127,7 @@ export default function Groups() {
                 setSelectedGoalId(goals[0]?.id || '')
                 setSelectedColor('#EF4444')
               }}
-              className={`mt-4 whitespace-nowrap rounded-lg px-6 py-2 text-sm font-medium transition-colors ${
+              className={`mt-4 rounded-lg px-6 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                 isDark
                   ? 'bg-white text-black hover:bg-gray-100'
                   : 'bg-black text-white hover:bg-gray-900'
@@ -237,7 +237,7 @@ export default function Groups() {
                     isDark
                       ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
                       : 'border border-gray-200 bg-gray-50 text-black focus:border-gray-300'
-                  } outline-none transition-colors`}
+                  } transition-colors outline-none`}
                   placeholder="그룹 이름을 입력하세요"
                   autoFocus
                 />
@@ -260,7 +260,6 @@ export default function Groups() {
                       } ${isDark ? 'ring-offset-zinc-900' : 'ring-offset-white'}`}
                       style={{
                         backgroundColor: color,
-                        ringColor: color,
                       }}
                     />
                   ))}
@@ -279,7 +278,7 @@ export default function Groups() {
                       key={goal.id}
                       type="button"
                       onClick={() => setSelectedGoalId(goal.id)}
-                      className={`flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
+                      className={`flex cursor-pointer items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                         selectedGoalId === goal.id
                           ? isDark
                             ? 'bg-white text-black'
@@ -302,7 +301,7 @@ export default function Groups() {
               <button
                 onClick={handleCreateGroup}
                 disabled={!newGroupName.trim()}
-                className={`w-full whitespace-nowrap rounded-lg py-3 text-sm font-medium transition-colors ${
+                className={`w-full rounded-lg py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                   newGroupName.trim()
                     ? isDark
                       ? 'bg-white text-black hover:bg-gray-100'
@@ -360,7 +359,7 @@ export default function Groups() {
                     isDark
                       ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
                       : 'border border-gray-200 bg-gray-50 text-black focus:border-gray-300'
-                  } outline-none transition-colors`}
+                  } transition-colors outline-none`}
                   placeholder="그룹 이름을 입력하세요"
                   autoFocus
                 />
@@ -383,7 +382,6 @@ export default function Groups() {
                       } ${isDark ? 'ring-offset-zinc-900' : 'ring-offset-white'}`}
                       style={{
                         backgroundColor: color,
-                        ringColor: color,
                       }}
                     />
                   ))}
@@ -402,7 +400,7 @@ export default function Groups() {
                       key={goal.id}
                       type="button"
                       onClick={() => setSelectedGoalId(goal.id)}
-                      className={`flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
+                      className={`flex cursor-pointer items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                         selectedGoalId === goal.id
                           ? isDark
                             ? 'bg-white text-black'
@@ -425,7 +423,7 @@ export default function Groups() {
               <button
                 onClick={handleEditGroup}
                 disabled={!newGroupName.trim()}
-                className={`w-full whitespace-nowrap rounded-lg py-3 text-sm font-medium transition-colors ${
+                className={`w-full rounded-lg py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                   newGroupName.trim()
                     ? isDark
                       ? 'bg-white text-black hover:bg-gray-100'

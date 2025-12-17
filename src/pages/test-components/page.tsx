@@ -17,9 +17,8 @@ export default function TestComponentsPage() {
   return (
     <div className={cn('min-h-screen p-8', themeClasses.bg.primary)}>
       <div className="mx-auto max-w-4xl space-y-12">
-        {/* Header */}
         <div>
-          <h1 className={cn('text-4xl font-bold mb-2', themeClasses.text.primary)}>
+          <h1 className={cn('mb-2 text-4xl font-bold', themeClasses.text.primary)}>
             🎨 컴포넌트 테스트
           </h1>
           <p className={cn('text-lg', themeClasses.text.secondary)}>
@@ -29,12 +28,12 @@ export default function TestComponentsPage() {
 
         {/* Buttons */}
         <section className={cn('rounded-2xl p-6', themeClasses.bg.secondary)}>
-          <h2 className={cn('text-2xl font-semibold mb-4', themeClasses.text.primary)}>
+          <h2 className={cn('mb-4 text-2xl font-semibold', themeClasses.text.primary)}>
             Button 컴포넌트
           </h2>
           <div className="space-y-4">
             <div>
-              <h3 className={cn('text-sm font-medium mb-3', themeClasses.text.secondary)}>
+              <h3 className={cn('mb-3 text-sm font-medium', themeClasses.text.secondary)}>
                 Variants
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -46,9 +45,7 @@ export default function TestComponentsPage() {
             </div>
 
             <div>
-              <h3 className={cn('text-sm font-medium mb-3', themeClasses.text.secondary)}>
-                Sizes
-              </h3>
+              <h3 className={cn('mb-3 text-sm font-medium', themeClasses.text.secondary)}>Sizes</h3>
               <div className="flex flex-wrap items-center gap-3">
                 <Button size="sm">Small</Button>
                 <Button size="md">Medium</Button>
@@ -57,7 +54,7 @@ export default function TestComponentsPage() {
             </div>
 
             <div>
-              <h3 className={cn('text-sm font-medium mb-3', themeClasses.text.secondary)}>
+              <h3 className={cn('mb-3 text-sm font-medium', themeClasses.text.secondary)}>
                 States
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -70,10 +67,10 @@ export default function TestComponentsPage() {
 
         {/* Inputs */}
         <section className={cn('rounded-2xl p-6', themeClasses.bg.secondary)}>
-          <h2 className={cn('text-2xl font-semibold mb-4', themeClasses.text.primary)}>
+          <h2 className={cn('mb-4 text-2xl font-semibold', themeClasses.text.primary)}>
             Input 컴포넌트
           </h2>
-          <div className="space-y-4 max-w-md">
+          <div className="max-w-md space-y-4">
             <Input
               label="기본 Input"
               placeholder="텍스트를 입력하세요"
@@ -92,7 +89,7 @@ export default function TestComponentsPage() {
 
         {/* Modal */}
         <section className={cn('rounded-2xl p-6', themeClasses.bg.secondary)}>
-          <h2 className={cn('text-2xl font-semibold mb-4', themeClasses.text.primary)}>
+          <h2 className={cn('mb-4 text-2xl font-semibold', themeClasses.text.primary)}>
             Modal 컴포넌트
           </h2>
           <div className="flex gap-3">
@@ -119,7 +116,7 @@ export default function TestComponentsPage() {
 
         {/* ColorPicker */}
         <section className={cn('rounded-2xl p-6', themeClasses.bg.secondary)}>
-          <h2 className={cn('text-2xl font-semibold mb-4', themeClasses.text.primary)}>
+          <h2 className={cn('mb-4 text-2xl font-semibold', themeClasses.text.primary)}>
             ColorPicker 컴포넌트
           </h2>
           <div className="space-y-4">
@@ -128,9 +125,7 @@ export default function TestComponentsPage() {
                 className="h-12 w-12 rounded-lg border-2 border-gray-300 dark:border-zinc-600"
                 style={{ backgroundColor: selectedColor }}
               />
-              <span className={themeClasses.text.secondary}>
-                선택된 색상: {selectedColor}
-              </span>
+              <span className={themeClasses.text.secondary}>선택된 색상: {selectedColor}</span>
             </div>
             <ColorPicker colors={COLORS} selected={selectedColor} onChange={setSelectedColor} />
           </div>
@@ -138,18 +133,13 @@ export default function TestComponentsPage() {
 
         {/* IconPicker */}
         <section className={cn('rounded-2xl p-6', themeClasses.bg.secondary)}>
-          <h2 className={cn('text-2xl font-semibold mb-4', themeClasses.text.primary)}>
+          <h2 className={cn('mb-4 text-2xl font-semibold', themeClasses.text.primary)}>
             IconPicker 컴포넌트
           </h2>
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <i
-                className={cn(selectedIcon, 'text-4xl')}
-                style={{ color: selectedColor }}
-              />
-              <span className={themeClasses.text.secondary}>
-                선택된 아이콘: {selectedIcon}
-              </span>
+              <i className={cn(selectedIcon, 'text-4xl')} style={{ color: selectedColor }} />
+              <span className={themeClasses.text.secondary}>선택된 아이콘: {selectedIcon}</span>
             </div>
             <IconPicker
               icons={ICONS}
@@ -162,24 +152,24 @@ export default function TestComponentsPage() {
 
         {/* Combined Example */}
         <section className={cn('rounded-2xl p-6', themeClasses.bg.secondary)}>
-          <h2 className={cn('text-2xl font-semibold mb-4', themeClasses.text.primary)}>
+          <h2 className={cn('mb-4 text-2xl font-semibold', themeClasses.text.primary)}>
             ✨ 조합 예제
           </h2>
           <p className={cn('mb-6', themeClasses.text.secondary)}>
             모든 컴포넌트를 함께 사용하는 예제입니다
           </p>
-          <div className="space-y-6 max-w-md">
+          <div className="max-w-md space-y-6">
             <Input label="목표 이름" placeholder="목표 이름을 입력하세요" />
 
             <div>
-              <label className={cn('block text-sm font-medium mb-3', themeClasses.text.secondary)}>
+              <label className={cn('mb-3 block text-sm font-medium', themeClasses.text.secondary)}>
                 색상 선택
               </label>
               <ColorPicker colors={COLORS} selected={selectedColor} onChange={setSelectedColor} />
             </div>
 
             <div>
-              <label className={cn('block text-sm font-medium mb-3', themeClasses.text.secondary)}>
+              <label className={cn('mb-3 block text-sm font-medium', themeClasses.text.secondary)}>
                 아이콘 선택
               </label>
               <IconPicker
@@ -200,4 +190,3 @@ export default function TestComponentsPage() {
     </div>
   )
 }
-
