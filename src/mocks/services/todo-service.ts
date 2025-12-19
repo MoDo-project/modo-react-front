@@ -246,3 +246,31 @@ export const moveTodos = (
 
   return { success: true, todos: getTodosByUser(userId) }
 }
+
+/**
+ * Delete a todo and all its descendants
+ */
+export const deleteTodo = (
+  userId: number,
+  todoId: number
+): { success: boolean; error?: string } => {
+  // Find todo
+  const todo = db.getTodoById(todoId)
+  if (!todo) {
+    return { success: false, error: 'Todo not found' }
+  }
+
+  // Check ownership
+  if (todo.creatorId !== userId) {
+    return { success: false, error: 'Unauthorized' }
+  }
+
+  // Find all descendants (including the todo itself)
+  const allUserTodos = db.getTodosByCreatorId(userId)
+  const todosToDelete = allUserTodos.filter((t) => t.path.startsWith(todo.path) || t.id === todoId)
+
+  // Delete all todos
+  todosToDelete.forEach((t) => db.deleteTodo(t.id))
+
+  return { success: true }
+}

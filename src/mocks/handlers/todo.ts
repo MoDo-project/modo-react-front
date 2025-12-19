@@ -157,4 +157,29 @@ export const todoHandlers = [
       return HttpResponse.json({ message: 'Internal server error' }, { status: 500 })
     }
   }),
+
+  // DELETE /todo/:id
+  http.delete(`${BASE_URL}/todo/:id`, ({ request, params }) => {
+    try {
+      const userId = getUserIdOrDefault(request)
+      const todoId = parseInt(params.id as string)
+
+      if (isNaN(todoId)) {
+        return HttpResponse.json({ message: 'Invalid todo ID' }, { status: 400 })
+      }
+
+      const result = todoService.deleteTodo(userId, todoId)
+
+      if (!result.success) {
+        const status =
+          result.error === 'Unauthorized' ? 403 : result.error === 'Todo not found' ? 404 : 400
+        return HttpResponse.json({ message: result.error }, { status })
+      }
+
+      return HttpResponse.json(null, { status: 204 })
+    } catch (error) {
+      console.error('Delete todo error:', error)
+      return HttpResponse.json({ message: 'Internal server error' }, { status: 500 })
+    }
+  }),
 ]
