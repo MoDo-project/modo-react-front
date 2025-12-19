@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useThemeStore, selectIsDark } from 'entities/theme'
-import { useAuthStatus } from 'entities/auth'
 import {
   useTodos,
   useCreateTodo,
@@ -14,7 +13,7 @@ import {
   getAllGoalTodos,
 } from '@/entities/todo'
 import TodoList from '@/pages/todos/components/TodoList'
-import GoalTabs from '@/pages/todos/components/GoalTabs'
+import { GoalTabs } from '@/widgets/todo/goal-tabs'
 import Header from '@/pages/todos/components/Header'
 import AddTodoModal from '@/pages/todos/components/AddTodoModal'
 import { AddGoalModal } from '@/features/goal/add-goal'
