@@ -83,4 +83,8 @@ export default defineConfig({
     port: 3000,
     host: "0.0.0.0",
   },
+  optimizeDeps: {
+    exclude: ['msw/node'],
+    include: ['msw/browser', 'msw'],
+  },
 });
