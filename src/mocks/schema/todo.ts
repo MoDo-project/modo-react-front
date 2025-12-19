@@ -15,3 +15,7 @@ export type CreateTodoRequest = Pick<Todo, 'title' | 'description' | 'deadline' 
 
 export type CreateTodoResponse = Todo[]
 
+export type UpdateTodoRequest = Partial<Pick<Todo, 'title' | 'description' | 'isCompleted' | 'deadline' | 'parentId' | 'orderNumber'>>
+
+export type UpdateTodoResponse = Todo[]
+
