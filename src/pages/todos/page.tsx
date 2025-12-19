@@ -1,17 +1,13 @@
 import { useState } from 'react'
 import { useThemeStore, selectIsDark } from 'entities/theme'
+import { useTodos, apiTodosToUiTodos, todosToGoals, getAllGoalTodos } from '@/entities/todo'
 import {
-  useTodos,
-  useCreateTodo,
-  useToggleTodo,
-  useUpdateTodo,
-  useDeleteTodo,
-  useReorderTodos,
-  apiTodosToUiTodos,
-  uiTodoToApiRequest,
-  todosToGoals,
-  getAllGoalTodos,
-} from '@/entities/todo'
+  useCreateTodoFeature,
+  useUpdateTodoFeature,
+  useDeleteTodoFeature,
+  useToggleTodoFeature,
+  useReorderTodosFeature,
+} from '@/features/todo'
 import TodoList from '@/pages/todos/components/TodoList'
 import { GoalTabs } from '@/widgets/todo/goal-tabs'
 import Header from '@/pages/todos/components/Header'
@@ -23,11 +19,11 @@ export const TodosPage = () => {
   const isDark = useThemeStore(selectIsDark)
 
   const { data: apiTodos = [], isLoading } = useTodos()
-  const createTodoMutation = useCreateTodo()
-  const toggleTodoMutation = useToggleTodo()
-  const updateTodoMutation = useUpdateTodo()
-  const deleteTodoMutation = useDeleteTodo()
-  const reorderTodosMutation = useReorderTodos()
+  const { createTodo } = useCreateTodoFeature()
+  const { updateTodo } = useUpdateTodoFeature()
+  const { deleteTodo } = useDeleteTodoFeature()
+  const { toggleTodo } = useToggleTodoFeature()
+  const { reorderTodos } = useReorderTodosFeature()
 
   // API todos를 UI todos로 변환
   const todos = apiTodosToUiTodos(apiTodos)
@@ -69,28 +65,14 @@ export const TodosPage = () => {
   }
 
   const handleAddTodo = (goalId: string, title: string) => {
-    // 전체보기에서는 parentId를 null로 설정하여 Goal 생성
-    // 그 외에는 parentTodoId가 있으면 하위 할일, 없으면 Goal의 자식으로 추가
-    const parentId = selectedGoalId === 'all' ? null : (parentTodoId ?? goalId)
-
-    console.log('🔵 handleAddTodo:', { goalId, title, parentId, parentTodoId, selectedGoalId })
-
-    const todoRequest = uiTodoToApiRequest({
+    createTodo({
+      goalId,
       title,
-      description: '',
-      parentId,
-    })
-
-    console.log('🔵 todoRequest:', todoRequest)
-
-    createTodoMutation.mutate(todoRequest, {
+      parentTodoId,
+      selectedGoalId,
       onSuccess: () => {
-        console.log('✅ Todo created successfully')
         setParentTodoId(null)
         setDefaultGoalId(null)
-      },
-      onError: (error) => {
-        console.error('❌ Todo creation failed:', error)
       },
     })
   }
@@ -98,35 +80,7 @@ export const TodosPage = () => {
   const handleToggleTodo = (id: string) => {
     const todo = todos.find((t) => t.id === id)
     if (!todo) return
-
-    toggleTodoMutation.mutate({
-      id: Number(id),
-      isCompleted: !todo.completed,
-    })
-  }
-
-  const handleUpdateTodo = (id: string, title: string) => {
-    updateTodoMutation.mutate({
-      id: Number(id),
-      title,
-    })
-  }
-
-  const handleDeleteTodo = (id: string) => {
-    deleteTodoMutation.mutate(Number(id))
-  }
-
-  const handleReorderTodos = (reorderedTodos: UiTodo[]) => {
-    if (reorderedTodos.length === 0) return
-
-    // 모든 todos가 같은 parentId를 가져야 함
-    const parentId = reorderedTodos[0].parentId ? Number(reorderedTodos[0].parentId) : null
-    const todoIds = reorderedTodos.map((todo) => Number(todo.id))
-
-    reorderTodosMutation.mutate({
-      todoIds,
-      parentId,
-    })
+    toggleTodo(id, !todo.completed)
   }
 
   const handleCloseModal = () => {
@@ -143,24 +97,23 @@ export const TodosPage = () => {
   const handleSaveGoal = (title: string, color: string, icon: string) => {
     if (editingGoal) {
       // Goal 편집 = parentId가 null인 Todo 편집
-      handleUpdateTodo(editingGoal.id, title)
+      updateTodo(editingGoal.id, title)
       // TODO: color, icon도 업데이트 필요 (API에 필드 추가 필요)
     } else {
       // 새 Goal 생성 = parentId가 null인 Todo 생성
-      const todoRequest = uiTodoToApiRequest({
+      createTodo({
+        goalId: '',
         title,
-        description: '',
-        parentId: null, // parentId를 null로 설정하여 Goal로 생성
+        parentTodoId: null,
+        selectedGoalId: 'all',
       })
-
-      createTodoMutation.mutate(todoRequest)
     }
     setEditingGoal(null)
   }
 
   const handleDeleteGoal = (id: string) => {
     // Goal 삭제 = parentId가 null인 Todo 삭제 (하위 todos도 함께 삭제됨)
-    handleDeleteTodo(id)
+    deleteTodo(id)
   }
 
   const handleCloseGoalModal = () => {
@@ -230,10 +183,10 @@ export const TodosPage = () => {
               todos={filteredTodos}
               goals={goals}
               onToggle={handleToggleTodo}
-              onDelete={handleDeleteTodo}
-              onUpdate={handleUpdateTodo}
+              onDelete={deleteTodo}
+              onUpdate={updateTodo}
               onAddSubtask={handleAddSubtask}
-              onReorder={handleReorderTodos}
+              onReorder={reorderTodos}
               showGoalTags={false}
             />
           </div>
@@ -266,10 +219,10 @@ export const TodosPage = () => {
               todos={filteredTodos}
               goals={goals}
               onToggle={handleToggleTodo}
-              onDelete={handleDeleteTodo}
-              onUpdate={handleUpdateTodo}
+              onDelete={deleteTodo}
+              onUpdate={updateTodo}
               onAddSubtask={handleAddSubtask}
-              onReorder={handleReorderTodos}
+              onReorder={reorderTodos}
               showGoalTags={true}
             />
           </div>

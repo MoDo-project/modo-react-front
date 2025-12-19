@@ -1,2 +1,2 @@
-export { GoalTabs } from './ui/goal-tabs'
+export * from './ui/goal-tabs'
 

@@ -70,7 +70,7 @@ export function useToggleTodo() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, isCompleted }: { id: number; isCompleted: boolean }) =>
+    mutationFn: ({ id, isCompleted }: { id: string; isCompleted: boolean }) =>
       todoApi.updateTodo({ id, isCompleted }),
     onSuccess: (data) => {
       if (!data) return
@@ -98,7 +98,7 @@ export function useDeleteTodo() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: number) => todoApi.deleteTodo(id),
+    mutationFn: (id: string) => todoApi.deleteTodo(id),
     onSuccess: () => {
       // todos 목록 갱신
       queryClient.invalidateQueries({ queryKey: todoKeys.list() })

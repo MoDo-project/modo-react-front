@@ -1,1 +1,1 @@
-export { GoalActionsMenu } from './goal-actions-menu'
+export * from './goal-actions-menu'

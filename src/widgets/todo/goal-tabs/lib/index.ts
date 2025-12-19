@@ -1,3 +1,3 @@
-export { calcMenuPosition } from './calcMenuPosition'
-export { getTabFromSelectedGoal } from './getTabFromSelectedGoal'
+export * from './calcMenuPosition'
+export * from './getTabFromSelectedGoal'
 

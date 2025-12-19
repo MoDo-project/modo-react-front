@@ -59,10 +59,8 @@ interface RecursiveTodoItemProps {
   calculateProgress: (todoId: string) => number
 }
 
-// 재귀적으로 렌더링되는 통합 Todo 컴포넌트
 function RecursiveTodoItem({
   todo,
-  goal,
   depth,
   todos,
   goals,
@@ -258,17 +256,6 @@ function RecursiveTodoItem({
           )}
         </div>
 
-        {/* Goal Tag */}
-        {showGoalTags && goal && (
-          <div
-            className="rounded-md px-2 py-1 text-xs font-medium whitespace-nowrap"
-            style={{ backgroundColor: `${goal.color}20`, color: goal.color }}
-          >
-            {goal.title}
-          </div>
-        )}
-
-        {/* Actions */}
         <div className="flex items-center gap-1">
           <button
             onClick={() => onAddSubtask(todo.id, todo.goalId)}
@@ -298,7 +285,6 @@ function RecursiveTodoItem({
         </div>
       </div>
 
-      {/* Recursive Subtasks */}
       {isExpanded && hasSubtasks && (
         <div>
           {subtasks
@@ -475,15 +461,8 @@ function TodoOverlayItem({
         </span>
       </div>
 
-      {/* Goal Tag */}
-      {showGoalTags && goal && (
-        <div
-          className="rounded-md px-2 py-1 text-xs font-medium whitespace-nowrap"
-          style={{ backgroundColor: `${goal.color}20`, color: goal.color }}
-        >
-          {goal.title}
-        </div>
-      )}
+      {/* Goal Tag - parentId가 null인 경우(Goal 자체)에는 표시하지 않음 */}
+      {todo.parentId !== null && <GoalTag goal={goal} />}
 
       {/* Action Buttons Spacer */}
       <div className="flex items-center gap-1">

@@ -1,1 +1,1 @@
-export { GoalTabSwitcher } from './goal-tab-switcher'
+export * from './goal-tab-switcher'

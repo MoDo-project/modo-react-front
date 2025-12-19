@@ -1,14 +1,14 @@
 import { apiClient } from '@/shared/api'
 
 export type Todo = {
-  id: number
+  id: string
   title: string
   description: string
   creatorId: number
   isCompleted: boolean
   createdAt: Date
   deadline: Date
-  parentId: number | null
+  parentId: string | null
   path: string
   orderNumber: number
 }
@@ -20,21 +20,21 @@ export type CreateTodoResponse = Todo[]
 export type UpdateTodoRequest = Partial<
   Pick<Todo, 'title' | 'description' | 'isCompleted' | 'deadline' | 'parentId' | 'orderNumber'>
 > & {
-  id: number
+  id: string
 }
 
 export type UpdateTodoResponse = Todo[]
 
 export type ReorderTodosRequest = {
-  todoIds: number[]
-  parentId: number | null
+  todoIds: string[]
+  parentId: string | null
 }
 
 export type ReorderTodosResponse = Todo[]
 
 export type MoveTodosRequest = {
-  todoIds: number[]
-  parentId: number | null
+  todoIds: string[]
+  parentId: string | null
 }
 
 export type MoveTodosResponse = Todo[]
@@ -82,7 +82,7 @@ export const todoApi = {
     }
   },
 
-  deleteTodo: async (id: number) => {
+  deleteTodo: async (id: string) => {
     try {
       const res = await apiClient.delete(`/todo/${id}`)
       if (res.status === 200 || res.status === 204) {

@@ -1,1 +1,1 @@
-export { GoalPillList } from './goal-pill-list'
+export * from './goal-pill-list'

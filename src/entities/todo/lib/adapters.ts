@@ -1,4 +1,4 @@
-import type { Todo as ApiTodo } from '../api/todo-api'
+import type { Todo as ApiTodo, CreateTodoRequest } from '../api/todo-api'
 import type { Todo as UiTodo } from '@/types'
 
 /**
@@ -8,7 +8,7 @@ import type { Todo as UiTodo } from '@/types'
 function findRootGoalId(apiTodo: ApiTodo, allTodos: ApiTodo[]): string {
   // parentId가 null이면 자기 자신이 Goal
   if (apiTodo.parentId === null) {
-    return String(apiTodo.id)
+    return apiTodo.id
   }
 
   // path의 첫 번째 숫자가 최상위 Goal의 orderNumber
@@ -18,7 +18,7 @@ function findRootGoalId(apiTodo: ApiTodo, allTodos: ApiTodo[]): string {
   // orderNumber와 parentId가 null인 todo를 찾기 (최상위 Goal)
   const rootGoal = allTodos.find((t) => t.parentId === null && t.orderNumber === rootOrderNumber)
 
-  return rootGoal ? String(rootGoal.id) : String(apiTodo.id)
+  return rootGoal ? rootGoal.id : apiTodo.id
 }
 
 /**
@@ -26,12 +26,12 @@ function findRootGoalId(apiTodo: ApiTodo, allTodos: ApiTodo[]): string {
  */
 export function apiTodoToUiTodo(apiTodo: ApiTodo, allTodos: ApiTodo[]): UiTodo {
   return {
-    id: String(apiTodo.id),
+    id: apiTodo.id,
     goalId: findRootGoalId(apiTodo, allTodos),
     title: apiTodo.title,
     completed: apiTodo.isCompleted,
     createdAt: new Date(apiTodo.createdAt),
-    parentId: apiTodo.parentId ? String(apiTodo.parentId) : null,
+    parentId: apiTodo.parentId ?? null,
     order: apiTodo.orderNumber,
   }
 }
@@ -45,12 +45,13 @@ export function uiTodoToApiRequest(
     deadline?: Date
     parentId?: string | null
   }
-) {
+): CreateTodoRequest {
+  const parentId: string | null = uiTodo.parentId ?? null
   return {
     title: uiTodo.title,
     description: uiTodo.description || '',
     deadline: uiTodo.deadline || new Date(),
-    parentId: uiTodo.parentId ? Number(uiTodo.parentId) : null,
+    parentId,
   }
 }
 
