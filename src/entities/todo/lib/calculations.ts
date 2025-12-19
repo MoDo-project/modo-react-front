@@ -19,10 +19,3 @@ export const getProgressColor = (progress: number): string => {
   if (progress > 0) return '#3b82f6'
   return '#d1d5db'
 }
-
-/**
- * 고차 함수: 진행률 계산 함수 생성
- */
-export const createProgressCalculator = (todos: Todo[]) => (parentId: string) =>
-  calculateProgress(todos, parentId)
-

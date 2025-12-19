@@ -2,14 +2,17 @@ import { useState } from 'react'
 import { useThemeStore, selectIsDark } from 'entities/theme'
 import { useAuthStatus } from 'entities/auth'
 import { useNavigate } from 'react-router-dom'
-import { useTodos } from '../../hooks/useTodos'
+import { useTodos, apiTodosToUiTodos, todosToGoals } from '@/entities/todo'
 import { StudyGroup } from '../../types'
 
 export const GroupsPage = () => {
   const { user } = useAuthStatus()
   const isDark = useThemeStore(selectIsDark)
   const navigate = useNavigate()
-  const { goals } = useTodos()
+
+  const { data: apiTodos = [] } = useTodos()
+  const todos = apiTodosToUiTodos(apiTodos)
+  const goals = todosToGoals(todos)
   const [groups, setGroups] = useState<StudyGroup[]>(() => {
     const saved = localStorage.getItem('studyGroups')
     return saved ? JSON.parse(saved) : []
