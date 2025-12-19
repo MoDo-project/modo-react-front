@@ -31,7 +31,7 @@ export default function AddTodoModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 p-4"
       onClick={onClose}
     >
       <div
@@ -67,7 +67,7 @@ export default function AddTodoModal({
                   key={goal.id}
                   type="button"
                   onClick={() => setSelectedGoalId(goal.id)}
-                  className={`flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
+                  className={`flex cursor-pointer items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                     selectedGoalId === goal.id
                       ? isDark
                         ? 'bg-white text-black'
@@ -101,7 +101,7 @@ export default function AddTodoModal({
                 isDark
                   ? 'border border-zinc-800 bg-black text-white focus:border-zinc-700'
                   : 'border border-gray-200 bg-gray-50 text-black focus:border-gray-300'
-              } outline-none transition-colors`}
+              } transition-colors outline-none`}
               placeholder="할일을 입력하세요"
               autoFocus
             />
@@ -110,7 +110,7 @@ export default function AddTodoModal({
           <button
             type="submit"
             disabled={!title.trim()}
-            className={`w-full cursor-pointer whitespace-nowrap rounded-lg py-3 text-sm font-medium transition-colors ${
+            className={`w-full cursor-pointer rounded-lg py-3 text-sm font-medium whitespace-nowrap transition-colors ${
               title.trim()
                 ? isDark
                   ? 'bg-white text-black hover:bg-gray-100'
