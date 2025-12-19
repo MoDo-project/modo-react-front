@@ -1,48 +1,33 @@
+/**
+ * Auth Handlers (Controller Layer)
+ * Handles HTTP requests/responses and delegates business logic to service layer
+ */
 import { http, HttpResponse } from 'msw'
-import { db } from '../db/db'
-import { verifyPassword, generateToken } from '../db/utils'
 import type { LoginRequest, LoginResponse, SignupRequest, SignupResponse } from '../schema/auth'
-import { hashPassword } from '../db/utils'
-
-// Match the exact baseURL from apiClient
-const getBaseURL = () => {
-  const raw = import.meta.env.VITE_API_BASE_URL || 'https://modo-api.khoon.kr/api/v1'
-  return raw.endsWith('/') ? raw.slice(0, -1) : raw
-}
-const BASE_URL = getBaseURL()
+import { BASE_URL } from '../utils/api-utils'
+import * as authService from '../services/auth-service'
 
 export const authHandlers = [
-  // POST /auth/login (v1)
+  // POST /auth/login
   http.post(`${BASE_URL}/auth/login`, async ({ request }) => {
     try {
       const body = (await request.json()) as LoginRequest
 
       // Validate request
       if (!body.username || !body.password) {
-        return HttpResponse.json(
-          { message: 'Username and password are required' },
-          { status: 400 }
-        )
+        return HttpResponse.json({ message: 'Username and password are required' }, { status: 400 })
       }
 
-      // Find user
-      const user = db.getUserByUsername(body.username)
-      if (!user) {
-        return HttpResponse.json({ message: 'Invalid credentials' }, { status: 401 })
-      }
+      const result = authService.loginUser(body)
 
-      // Verify password
-      if (!verifyPassword(body.password, user.password)) {
-        return HttpResponse.json({ message: 'Invalid credentials' }, { status: 401 })
+      if (!result.success) {
+        return HttpResponse.json({ message: result.error }, { status: 401 })
       }
-
-      // Generate token
-      const token = generateToken(user.id, user.username)
 
       const response: LoginResponse = {
-        accessToken: token,
-        username: user.username,
-        role: user.role,
+        accessToken: result.token!,
+        username: result.user!.username,
+        role: result.user!.role,
       }
 
       return HttpResponse.json(response, { status: 200 })
@@ -65,38 +50,23 @@ export const authHandlers = [
 
       // Validate request
       if (!body.username || !body.password || !body.nickname || !body.email) {
-        return HttpResponse.json(
-          { message: 'All fields are required' },
-          { status: 400 }
-        )
+        return HttpResponse.json({ message: 'All fields are required' }, { status: 400 })
       }
 
-      // Check if user already exists
-      const existingUser = db.getUserByUsername(body.username)
-      if (existingUser) {
-        return HttpResponse.json(
-          { message: 'Username already exists' },
-          { status: 409 }
-        )
-      }
+      const result = authService.registerUser(body)
 
-      // Create new user
-      const newUser = db.addUser({
-        username: body.username,
-        password: hashPassword(body.password),
-        nickname: body.nickname,
-        email: body.email,
-        profileImgPath: null,
-        role: 'USER',
-      })
+      if (!result.success) {
+        const status = result.error === 'Username already exists' ? 409 : 400
+        return HttpResponse.json({ message: result.error }, { status })
+      }
 
       const response: SignupResponse = {
-        id: newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
-        email: newUser.email,
-        profileImgPath: newUser.profileImgPath,
-        role: newUser.role,
+        id: result.user!.id,
+        username: result.user!.username,
+        nickname: result.user!.nickname,
+        email: result.user!.email,
+        profileImgPath: result.user!.profileImgPath,
+        role: result.user!.role,
       }
 
       return HttpResponse.json(response, { status: 201 })
@@ -106,4 +76,3 @@ export const authHandlers = [
     }
   }),
 ]
-
