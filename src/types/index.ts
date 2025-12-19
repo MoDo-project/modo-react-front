@@ -4,7 +4,7 @@ export interface Todo {
   title: string
   completed: boolean
   createdAt: Date
-  parentId?: string
+  parentId: string | null // Goal은 null, 하위 todo는 부모 ID
   order: number
 }
 

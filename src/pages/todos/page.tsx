@@ -11,7 +11,7 @@ import {
   apiTodosToUiTodos,
   uiTodoToApiRequest,
   todosToGoals,
-  getGoalTodos,
+  getAllGoalTodos,
 } from '@/entities/todo'
 import TodoList from '@/pages/todos/components/TodoList'
 import GoalTabs from '@/pages/todos/components/GoalTabs'
@@ -21,10 +21,8 @@ import { AddGoalModal } from '@/features/goal/add-goal'
 import { Goal, Todo as UiTodo } from '@/types'
 
 export const TodosPage = () => {
-  const { user, isGuest } = useAuthStatus()
   const isDark = useThemeStore(selectIsDark)
 
-  // Todos (API 기반)
   const { data: apiTodos = [], isLoading } = useTodos()
   const createTodoMutation = useCreateTodo()
   const toggleTodoMutation = useToggleTodo()
@@ -42,14 +40,26 @@ export const TodosPage = () => {
   const [isAddTodoOpen, setIsAddTodoOpen] = useState(false)
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false)
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null)
-  const [parentTodoId, setParentTodoId] = useState<string | undefined>(undefined)
-  const [defaultGoalId, setDefaultGoalId] = useState<string | undefined>(undefined)
+  const [parentTodoId, setParentTodoId] = useState<string | null>(null)
+  const [defaultGoalId, setDefaultGoalId] = useState<string | null>(null)
 
-  // 선택된 Goal의 하위 todos만 필터링 (Goal 자체는 제외)
+  // 선택된 Goal의 하위 todos만 필터링
   const filteredTodos =
     selectedGoalId === 'all'
-      ? todos.filter((todo) => todo.parentId !== null) // 전체보기: Goal 제외, 실제 할일만
-      : getGoalTodos(todos, selectedGoalId) // 특정 Goal의 직계 자식만
+      ? todos // 전체보기: 모든 todos 포함 (Goal 포함)
+      : getAllGoalTodos(todos, selectedGoalId) // 특정 Goal의 모든 하위 todos
+
+  // 디버깅을 위해 window에 노출
+  if (typeof window !== 'undefined') {
+    ;(window as any).DEBUG = {
+      apiTodos,
+      todos,
+      goals,
+      filteredTodos,
+      selectedGoalId,
+      isLoading,
+    }
+  }
 
   const selectedGoal = goals.find((g) => g.id === selectedGoalId)
 
@@ -60,17 +70,27 @@ export const TodosPage = () => {
   }
 
   const handleAddTodo = (goalId: string, title: string) => {
+    // parentTodoId가 있으면 하위 할일, 없으면 Goal의 자식으로 추가
+    const parentId = parentTodoId ?? goalId
+
+    console.log('🔵 handleAddTodo:', { goalId, title, parentId, parentTodoId })
+
     const todoRequest = uiTodoToApiRequest({
       title,
       description: '',
-      // parentTodoId가 있으면 하위 할일, 없으면 Goal의 자식으로 추가
-      parentId: parentTodoId || goalId,
+      parentId,
     })
+
+    console.log('🔵 todoRequest:', todoRequest)
 
     createTodoMutation.mutate(todoRequest, {
       onSuccess: () => {
-        setParentTodoId(undefined)
-        setDefaultGoalId(undefined)
+        console.log('✅ Todo created successfully')
+        setParentTodoId(null)
+        setDefaultGoalId(null)
+      },
+      onError: (error) => {
+        console.error('❌ Todo creation failed:', error)
       },
     })
   }
@@ -111,8 +131,8 @@ export const TodosPage = () => {
 
   const handleCloseModal = () => {
     setIsAddTodoOpen(false)
-    setParentTodoId(undefined)
-    setDefaultGoalId(undefined)
+    setParentTodoId(null)
+    setDefaultGoalId(null)
   }
 
   const handleEditGoal = (goal: Goal) => {
@@ -130,7 +150,7 @@ export const TodosPage = () => {
       const todoRequest = uiTodoToApiRequest({
         title,
         description: '',
-        parentId: undefined, // parentId를 null로 설정하여 Goal로 생성
+        parentId: null, // parentId를 null로 설정하여 Goal로 생성
       })
 
       createTodoMutation.mutate(todoRequest)
@@ -257,7 +277,7 @@ export const TodosPage = () => {
           goals={goals}
           onClose={handleCloseModal}
           onAdd={handleAddTodo}
-          defaultGoalId={defaultGoalId || (selectedGoalId !== 'all' ? selectedGoalId : undefined)}
+          defaultGoalId={defaultGoalId ?? (selectedGoalId !== 'all' ? selectedGoalId : undefined)}
           isSubtask={!!parentTodoId}
         />
       )}

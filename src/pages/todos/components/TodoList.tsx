@@ -703,7 +703,17 @@ export default function TodoList({
     onReorder(updatedTodos)
   }
 
-  const topLevelTodos = todos.filter((t) => !t.parentId).sort((a, b) => a.order - b.order)
+  // 전달받은 todos 배열 내에서만 부모-자식 관계를 확인하여 최상위 항목 찾기
+  // parentId가 null이거나, parentId가 전달받은 todos 배열에 없는 항목들을 최상위로 간주
+  const todoIdsSet = new Set(todos.map((t) => t.id))
+  const topLevelTodos = todos
+    .filter((t) => {
+      // parentId가 null이면 최상위
+      if (t.parentId === null) return true
+      // parentId가 전달받은 todos 배열에 없으면 최상위 (필터링된 배열의 최상위)
+      return !todoIdsSet.has(t.parentId)
+    })
+    .sort((a, b) => a.order - b.order)
   const allTodoIds = getAllTodoIds(topLevelTodos)
 
   if (topLevelTodos.length === 0) {

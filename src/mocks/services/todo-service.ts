@@ -16,29 +16,36 @@ export const getTodosByUser = (userId: number): Todo[] => {
  * Create a new todo
  */
 export const createTodo = (userId: number, data: CreateTodoRequest): Todo[] => {
+  console.log('🔴 MSW createTodo called:', { userId, data })
+
   // Calculate path and order number
   let path = ''
   let orderNumber = 1
 
   if (data.parentId) {
+    console.log('🔴 Creating child todo under parent:', data.parentId)
     const parentTodo = db.getTodoById(data.parentId)
     if (!parentTodo) {
+      console.error('🔴 Parent todo not found:', data.parentId)
       throw new Error('Parent todo not found')
     }
+    console.log('🔴 Parent todo found:', parentTodo)
     path = `${parentTodo.path}.${parentTodo.id}`
 
     // Count siblings to determine order number
     const siblings = db.getTodosByCreatorId(userId).filter((t) => t.parentId === data.parentId)
     orderNumber = siblings.length + 1
+    console.log('🔴 Siblings count:', siblings.length, 'New orderNumber:', orderNumber)
   } else {
-    // Root level todo
+    // Root level todo (Goal)
+    console.log('🔴 Creating root level todo (Goal)')
     const rootTodos = db.getTodosByCreatorId(userId).filter((t) => t.parentId === null)
     orderNumber = rootTodos.length + 1
     path = `${orderNumber}`
+    console.log('🔴 Root todos count:', rootTodos.length, 'New orderNumber:', orderNumber)
   }
 
-  // Create new todo
-  db.addTodo({
+  const newTodo = {
     title: data.title,
     description: data.description || '',
     creatorId: userId,
@@ -48,10 +55,17 @@ export const createTodo = (userId: number, data: CreateTodoRequest): Todo[] => {
     parentId: data.parentId || null,
     path,
     orderNumber,
-  })
+  }
+
+  console.log('🔴 Adding new todo:', newTodo)
+
+  // Create new todo
+  db.addTodo(newTodo)
 
   // Return all todos
-  return getTodosByUser(userId)
+  const allTodos = getTodosByUser(userId)
+  console.log('🔴 Returning all todos:', allTodos.length)
+  return allTodos
 }
 
 /**
