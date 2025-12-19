@@ -70,10 +70,11 @@ export const TodosPage = () => {
   }
 
   const handleAddTodo = (goalId: string, title: string) => {
-    // parentTodoId가 있으면 하위 할일, 없으면 Goal의 자식으로 추가
-    const parentId = parentTodoId ?? goalId
+    // 전체보기에서는 parentId를 null로 설정하여 Goal 생성
+    // 그 외에는 parentTodoId가 있으면 하위 할일, 없으면 Goal의 자식으로 추가
+    const parentId = selectedGoalId === 'all' ? null : (parentTodoId ?? goalId)
 
-    console.log('🔵 handleAddTodo:', { goalId, title, parentId, parentTodoId })
+    console.log('🔵 handleAddTodo:', { goalId, title, parentId, parentTodoId, selectedGoalId })
 
     const todoRequest = uiTodoToApiRequest({
       title,
@@ -246,7 +247,11 @@ export const TodosPage = () => {
                 전체보기
               </h2>
               <button
-                onClick={() => setIsAddTodoOpen(true)}
+                onClick={() => {
+                  setParentTodoId(null)
+                  setDefaultGoalId(null)
+                  setIsAddTodoOpen(true)
+                }}
                 className={`cursor-pointer rounded-lg px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                   isDark
                     ? 'bg-white text-black hover:bg-gray-100'

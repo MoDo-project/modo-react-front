@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useThemeStore, selectIsDark } from 'entities/theme'
 import { Goal } from '../../../types'
 
@@ -20,6 +20,15 @@ export default function AddTodoModal({
   const isDark = useThemeStore(selectIsDark)
   const [title, setTitle] = useState('')
   const [selectedGoalId, setSelectedGoalId] = useState(defaultGoalId || goals[0]?.id || '')
+
+  // defaultGoalId가 변경되거나 goals가 변경될 때 selectedGoalId 업데이트
+  useEffect(() => {
+    if (defaultGoalId) {
+      setSelectedGoalId(defaultGoalId)
+    } else if (goals.length > 0) {
+      setSelectedGoalId(goals[0].id)
+    }
+  }, [defaultGoalId, goals])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -109,9 +118,9 @@ export default function AddTodoModal({
 
           <button
             type="submit"
-            disabled={!title.trim()}
+            disabled={!title.trim() || !selectedGoalId}
             className={`w-full cursor-pointer rounded-lg py-3 text-sm font-medium whitespace-nowrap transition-colors ${
-              title.trim()
+              title.trim() && selectedGoalId
                 ? isDark
                   ? 'bg-white text-black hover:bg-gray-100'
                   : 'bg-black text-white hover:bg-gray-900'

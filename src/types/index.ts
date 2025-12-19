@@ -4,10 +4,11 @@ export interface Todo {
   title: string
   completed: boolean
   createdAt: Date
-  parentId: string | null // Goal은 null, 하위 todo는 부모 ID
+  parentId: string | null // null일 경우 Goal, 하위 todo는 부모 ID
   order: number
 }
 
+// ui Goal용
 export interface Goal {
   id: string
   title: string
